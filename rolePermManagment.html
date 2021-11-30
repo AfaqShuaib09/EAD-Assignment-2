@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/permissionManagement.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap" rel="stylesheet">
+    <script src="js/SecurityManager.js"></script>
+    <title>Role-Permissions Management</title>
+
+</head>
+<body onload="main()">
+    <nav>
+        <ul class = "nav_icons">
+            <li><a href="adminHome.html">Home</a></li>
+            <li><a href="userManagement.html">User Management</a></li>
+            <li><a href="roleManagement.html">Role Management</a></li>
+            <li><a href="permissionManagement.html">Permission Management</a></li>
+            <li><a href="#">Role Permission Management</a></li>
+            <li><a href="userRoleManagement.html">User Role Management</a></li>
+            <li><a href="index.html">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="form_container">
+        <div class="left">
+            <div class="form_head">
+                <h2 class="perm_head">Role-Permissions Management</h2>
+            </div>
+            <div class="form_body">
+                <label for="">Role:</label> <br>
+                <select name="dropdown" id='role_dd'>
+                    <option value="none" selected>Select </option>
+                </select>
+                <br><br>
+                <label for=""> Permissions: </label> </br>
+                <select name="dropdown" id='perm_dd'>
+                    <option value="none" selected>Select </option>
+                </select>
+            </div>
+            <div class="form_footer" align="right">
+                <button id="saveBtn">
+                    Save
+                </button>
+            </div>
+
+        </div>
+        <div class="right">
+            <table class="perm_data">
+                <thead>
+                    <tr = class="row_head">
+                        <th id="id">ID</th>
+                        <th id="role_name">Role</th>
+                        <th id="perm_name">Permissions</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="table_body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+       // document.getElementById("saveBtn").addEventListener("click", savePermission);
+    </script>
+</body>

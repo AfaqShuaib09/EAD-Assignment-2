@@ -58,15 +58,16 @@ div.form_container {
 }
 div.form_container {
     margin: 40px;
-    margin-left: 140px;
+    margin-left: 70px;
+    margin-top: 100px;
 }
 
 div.left {
-    margin-left: 30px;
+    margin-left: 15px;
 }
 
-h2.login_head{
-    padding: 25px;
+h2.perm_head{
+    padding: 20px;
     font-size: 25px;
     color: whitesmoke;
     font-family: 'Roboto Slab', serif;
@@ -74,9 +75,9 @@ h2.login_head{
 
 div.form_head {
     height: 80px;
-    width: 325px;
+    width: 320px;
     font-weight: bold;
-    padding-left: 5px;
+    padding-left: 10px;
     background-color:var(--primary);
 }
 
@@ -93,7 +94,7 @@ label {
     display:inline-block;
 }
 
-#login {
+#perm {
     margin-bottom: 8px;
     border-radius: 5px;
     border-color: gray;
@@ -138,18 +139,8 @@ button {
     cursor: pointer;
 }
 
-#city , #country{
-    font-family: 'Lato', sans-serif;
-    margin-bottom:0px;
-    display:inline-block;
-}
-
-select {
-    margin-bottom: 17px;
-}
-
-table.user_data {
-    margin-top: 100px;
+table.perm_data {
+    margin-top: 30px;
 } 
 
 th {
@@ -157,24 +148,34 @@ th {
     color: whitesmoke;
 }
 
+#perm_id {
+    height: 40px;
+    width: 50px;
+}
+
+#perm_name {
+    width:120px;
+}
+
+#perm_desc {
+    width: 250px;
+}
+
 table, th, td {
     border: 0.1px solid black;
     border-collapse: collapse;
  }
 
-table.user_data {
+table.perm_data {
     border : 1px solid;
     text-align: center;
 }
 
-table.user_data th {
+table.perm_data th {
     height: 40px;
-    width: 20px;
+    width: 90px;
 }
 
-table.user_data td {
+table.perm_data td {
     height: 40px;
-    width: 120px;
 }
-
-

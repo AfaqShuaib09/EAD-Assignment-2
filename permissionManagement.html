@@ -4,28 +4,28 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="styles/roleManagement.css">
+    <link rel="stylesheet" href="styles/permissionManagement.css">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap" rel="stylesheet">
     <script src="js/SecurityManager.js"></script>
     <title>Role Management</title>
 
     <script>
-        var roleID=-1;
+        var permID=-1;
         function main(){
             loadTable();
             delLinksEventListener();
             editLinksEventListener();
         }
         function loadTable(){
-            var role_tb = document.getElementById("table_body");
-            let arr = SecurityManager.GetAllRoles();
+            var perm_tb = document.getElementById("table_body");
+            let arr = SecurityManager.GetAllPermissions();
             console.log(arr);
-            role_tb.innerHTML = '';
+            perm_tb.innerHTML = '';
             for(let i=0;i<arr.length;i++){
-                let role_id = arr[i].ID;
-                let role_name = arr[i].name;
-                let role_desc = arr[i].description;
-                role_tb.innerHTML += `<tr>  <td id="rowid_${i}" class=row_id">${role_id}</td>  <td class="role_name">${role_name}</td> <td class="role_desc">${role_desc}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" class="del_links"">Delete</a></td> </tr>`
+                let perm_id = arr[i].ID;
+                let perm_name = arr[i].name;
+                let perm_desc = arr[i].description;
+                perm_tb.innerHTML += `<tr>  <td id="rowid_${i}" class=row_id">${perm_id}</td>  <td class="role_name">${perm_name}</td> <td class="role_desc">${perm_desc}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" class="del_links"">Delete</a></td> </tr>`
             } 
         }
         function delLinksEventListener(){
@@ -37,7 +37,7 @@
                 console.log(id);
                 var val =confirm("Are you sure you want to delete?");
                 if (val){
-                    SecurityManager.DeleteRole(parseInt(id),function(){
+                    SecurityManager.DeletePermission(parseInt(id),function(){
                         console.log("deleted successfully");
                         main();
                     }, function(){})
@@ -53,30 +53,31 @@
                 links2[i].onclick = function() {
                 let id = document.getElementById(`rowid_${i}`).innerHTML;
                 console.log(id);
-                var role = SecurityManager.GetRoleById(parseInt(id));
-                let name = document.getElementById("role");
+                var perm = SecurityManager.GetPermissionById(parseInt(id));
+                let name = document.getElementById("perm");
                 let description = document.getElementById("desc");
 
-                name.value = role.name;
-                description.value = role.description;
-                roleID = role.ID;
+                name.value = perm.name;
+                description.value = perm.description;
+                permID = perm.ID;
                 }
             }
         }
 
         function clearfields(){
-            document.getElementById("role").value="";
+            document.getElementById("perm").value="";
             document.getElementById("desc").value="";
         }
-        function saveRoles(){
-            var name = document.getElementById("role");
+
+        function savePermission(){
+            var name = document.getElementById("perm");
             var desc = document.getElementById("desc");
             if(name=="" || desc==""){
                 alert("Empty Necessary Fields 😔")
             }
-            if (roleID<=0)
+            if (permID<=0)
             {
-                let arr = SecurityManager.GetAllRoles();
+                let arr = SecurityManager.GetAllPermissions();
                 for (let i=0;i<arr.length;i++)
                 {
                     if(arr[i].name==name.value){
@@ -85,23 +86,25 @@
                     }
                 }
             }
-            var roleObj = new Role(roleID,name.value, desc.value);
-            SecurityManager.SaveRole(roleObj, clearfields, function(){
+            var permObj = new Permission(permID,name.value, desc.value);
+            SecurityManager.SavePermission(permObj, clearfields, function(){
                 alert('Record not Added');
             });
-            console.log(SecurityManager.GetAllRoles());
-            roleID = -1;
+            console.log(SecurityManager.GetAllPermissions());
+            permID = -1;
             main();
         }
     </script>
+
+
 </head>
 <body onload="main()">
     <nav>
         <ul class = "nav_icons">
             <li><a href="adminHome.html">Home</a></li>
             <li><a href="userManagement.html">User Management</a></li>
-            <li><a href="#">Role Management</a></li>
-            <li><a href="permissionManagement.html">Permission Management</a></li>
+            <li><a href="roleManagement.html">Role Management</a></li>
+            <li><a href="#">Permission Management</a></li>
             <li><a href="rolePermManagment.html">Role Permission Management</a></li>
             <li><a href="userRoleManagement.html">User Role Management</a></li>
             <li><a href="index.html">Logout</a></li>
@@ -110,11 +113,11 @@
     <div class="form_container">
         <div class="left">
             <div class="form_head">
-                <h2 class="role_head">Role Management</h2>
+                <h2 class="perm_head">Permission Management</h2>
             </div>
             <div class="form_body">
-                <label for=""> Role Name: </label> </br>
-                <input type="text" id="role" name="role" size="33" required/>
+                <label for=""> Permission Name: </label> </br>
+                <input type="text" id="perm" name="perm" size="33" required/>
                 <br><br>
                 <label for="">Description:</label> <br>
                 <input type="text" id="desc" name="desc" size="33" required/>
@@ -127,12 +130,12 @@
 
         </div>
         <div class="right">
-            <table class="role_data">
+            <table class="perm_data">
                 <thead>
                     <tr = class="row_head">
-                        <th id="role_id">ID</th>
-                        <th id="role_name">Name</th>
-                        <th id="role_desc">Description</th>
+                        <th id="perm_id">ID</th>
+                        <th id="perm_name">Name</th>
+                        <th id="perm_desc">Description</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>
@@ -145,10 +148,7 @@
     </div>
 
     <script>
-        document.getElementById("saveBtn").addEventListener("click", saveRoles);
-        // for(let i=0;i<2;i++){
-        //     SecurityManager.DeleteRole(i, function(){}, function(){});
-        // }
+        document.getElementById("saveBtn").addEventListener("click", savePermission);
     </script>
 </body>
 </html>

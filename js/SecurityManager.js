@@ -14,6 +14,11 @@
      this.description = description;
  }
  
+ function Permission(id, name, description){
+    this.ID = id;
+    this.name = name;
+    this.description = description;
+ }
 //   var quayHotel = new Hotel('Quay', 40, 29);
 
 var SecurityManager = {};
