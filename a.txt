@@ -1,0 +1,8 @@
+var links = document.getElementsByClassName("edit_links")
+            console.log(links);
+            for(let i=0;i<links.length;i++){
+            links[i].onclick = function() {
+                id = document.getElementById(`rowid_${i}`).innerHTML;
+                SecurityManager.DeleteUser (parseInt(id), function(){console.log('deleted succesfully')},
+                function(){});
+            }

@@ -1,0 +1,74 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300&display=swap');
+
+@font-face {
+    font-family: "chunk_five123";
+    src: url('/fonts/Chunk.ttf');
+}
+
+* {
+    margin:0px;
+}
+
+:root {
+    --primary : #343434;
+    --positive: #3CB371;
+}
+
+nav {
+    background-color: var(--primary);
+}
+nav ul li a {
+    font-size: 20px;
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-transform: capitalize;
+    color: var(--positive);
+}
+
+
+nav ul li {
+  font-family: 'Oswald', sans-serif;
+  list-style: none;
+  display: inline-block;
+  padding: 20px 10px;
+  padding-right: 8px;    
+}
+
+nav ul.nav_icons li:nth-child(1) a {
+    margin-left: 5px;
+}
+
+h1 {
+    margin-top: 30px;
+    margin-left: 150px;
+    color: var(--primary);
+    font-weight: bold;
+    font-size: 40px;
+    padding: 5px;
+    font-family: "chunk_five123";
+}
+
+button.logout {
+    background-color: var(--primary);
+    margin: 30px;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 15px;
+    border: none;
+    width: 100px;
+    line-height: 24px;
+    outline: none;
+    cursor: pointer;
+}
+
+button a {
+    text-decoration: none;
+    color: whitesmoke;
+}
+
+button a:hover {
+    color: var(--positive) ;
+}

@@ -1,0 +1,119 @@
+﻿@font-face {
+    font-family: "chunk_five";
+    src: url("/fonts/Chunk.ttf")
+}
+
+@font-face {
+    font-family: "chunkfive_print";
+    src: url("/fonts/Chunk\ Five\ Print.ttf");
+}
+
+:root {
+    --primary : #343434;
+}
+
+* {
+    margin:0px;
+}
+
+div.container{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+div.menu{
+    padding:5px;
+    margin-top:5px;
+}
+div.menu a{
+    background-color:lightgrey;
+    padding:5px;
+    margin-left:2px;
+}
+
+div.main{
+    padding-top: 10px;
+    padding-left: 40px;
+    padding-right: 40px;
+    display: block;
+  	margin-left: auto;
+	margin-right: auto;
+    align-items: center;
+    margin-top: 70px;
+}
+
+div.form_container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 20px;
+  
+}
+
+div.form_head {
+    height: 50px;
+    width: 300px;
+    font-weight: bold;
+    padding-left: 30px;
+    background-color:var(--primary);
+}
+
+div.form_body {
+    background-color: whitesmoke;
+    width: 270px;
+    padding: 30px;
+    padding-top: 25px;
+}
+
+h2{
+    font-weight: bold;
+    font-size: 40px;
+    padding: 5px;
+    /* font-family: "chunkfive_print"; */
+    font-family: "chunk_five";
+}
+
+h2.login_head{
+    padding: 5px;
+    font-size: 25px;
+    color: whitesmoke;
+    font-family: 'Roboto Slab', serif;
+}
+
+label {
+    font-family: 'Lato', sans-serif;
+    margin-bottom:8px;
+    display:inline-block;
+}
+
+input {
+    border-radius: 5px;
+    border-color: gray;
+    /* outline-width: 0; */
+    line-height: 2em; 
+}
+
+div.form_footer {
+    padding-right: 20px;
+    height: 50px;
+    width: 280px;
+    font-weight: bold;
+    padding-left: 30px;
+    background-color: var(--primary);
+}
+
+
+button {
+    background: #ededed;
+    color: black;
+    margin-top: 10px;
+    padding: 4px 8px;
+    font-size: 12px;
+    border-radius: 15px;
+    border: none;
+    width: 100px;
+    line-height: 24px;
+    outline: none;
+    cursor: pointer;
+}
+

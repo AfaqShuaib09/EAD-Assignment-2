@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://unicons.iconscout.com/release/v2.1.3/css/unicons.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Lato&family=Roboto+Slab&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/Style.css">
+    <script src="js/SecurityManager.js"></script>
+    <title>Assignment 2</title>
+    <script>
+        function Main(){
+            var countries = SecurityManager.GetCountries();
+            var cmb = document.getElementById('cmbCountries')
+            for(var i=0;i<countries.length;i++)
+            {
+                var opt = document.createElement("option");
+                opt.setAttribute("value",countries[i].CountryID);
+                opt.innerText = countries[i].Name;
+
+                cmb.appendChild(opt);
+            }
+
+
+            cmb.onchange = function(){
+
+                var citycmb = document.getElementById('cmbCities');
+
+                //Remove all child elements (e.g. options)
+                citycmb.innerHTML = '';
+
+                var cities = SecurityManager.GetCitiesByCountryId(cmb.value);
+
+                for(var i=0;i<cities.length;i++)
+                {
+                    var opt = document.createElement("option");
+                    opt.setAttribute("value",cities[i].CityID);
+                    opt.innerText = cities[i].Name;
+
+                    citycmb.appendChild(opt);
+                }   
+
+
+            }//end of onchange
+
+        }//end ofMain
+        
+    </script>
+
+</head>
+<body>
+    <div class="container">
+        <div class="main">
+            <h2>Security Manager</h2>
+                <div class="form_container">    
+                    <div>
+                        <div class="form_head">
+                            <h2 class="login_head">Login Admin</h2>
+                        </div>
+                        <div class="form_body">
+                            <label for="">Username: </label> </br>
+                            <input type="text" id="ad_name" name="ad_name" placeholder="username" size="33" required/>
+                            <br><br>
+                            <label for="">Password:</label> <br>
+                            <input type="password" id="ad_pswd" name="ad_pswd" placeholder="password" size="33" required/>
+                        </div>
+                        <div class="form_footer" align="right">
+                                <button id="loginBtn" onclick="ValidateAdmin()">
+                                    Login
+                                </button>
+                        </div>
+                    </div>         
+                 
+                    <div>
+                        <div class="form_head">
+                            <h2 class="login_head">Login User</h2>
+                        </div>
+                        <div class="form_body">
+                            <label for="">Username: </label> </br>
+                            <input type="text" id="usr_name" name="usr_name" placeholder="username" size="33" required/>
+                            <br><br>
+                            <label for="">Password:</label> <br>
+                            <input type="password" id="usr_pswd" name="usr_pswd" placeholder="password" size="33" required/>
+                        </div>
+                        <div class="form_footer" align="right">
+                                <button type="submit">
+                                    Login
+                                </button>
+                        </div> 
+                    </div>         
+            </div>
+        </div>
+        </div>
+        <br><br>
+        <h4 id="err_msg" style="color: red;" hidden>Invalid Credentials Try Again</h4>
+    </div>
+    <script>
+        function ValidateAdmin() {
+            console.log("btnclicked");
+            let adminlogin = document.getElementById("ad_name").value;
+            let adminPassword = document.getElementById("ad_pswd").value;
+            if(adminlogin=="" || adminPassword=="")
+            {
+                alert("Necessary Fields Empty 😔")
+                return;
+            }
+            console.log(` login: ${adminlogin} password: ${adminPassword}`)
+            if(SecurityManager.ValidateAdmin(adminlogin, adminPassword)){
+                window.location.href ='/adminHome.html';
+            }
+            else {
+                alert("Invalid Credentials :'(")
+                document.getElementById("err_msg").removeAttribute("hidden"); 
+            }
+        }
+    </script>
+
+</body>
+</html>

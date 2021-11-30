@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/usrManagement.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap" rel="stylesheet">
+    <script src="js/SecurityManager.js"></script>
+    <title>User Management</title>
+
+    <script>
+        function main(){
+            loadCountries();
+            loadTable();
+            var links = document.getElementsByClassName("del_links");
+            for(let i=0;i<links.length;i++)
+            {
+                links[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var val =confirm("Are you sure you want to delete?");
+                if (val){
+                    SecurityManager.DeleteUser(parseInt(id),function(){
+                        console.log("deleted successfully");
+                        main();
+                    }, function(){})
+                }
+            }
+            }
+            var links2 = document.getElementsByClassName("edit_links");
+            console.log(links2);
+            for(let i=0;i<links2.length;i++)
+            {
+                links2[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                console.log(SecurityManager.GetUserById (parseInt(id)));
+                }
+            }
+        }
+            
+        function loadTable(){
+            console.log(SecurityManager.GetAllUsers());
+            var user_tb = document.getElementById("table_body");
+            let arr = SecurityManager.GetAllUsers();
+            user_tb.innerHTML = '';
+            for(let i=0;i<arr.length;i++){
+                let user_id = arr[i].ID;
+                let user_name = arr[i].name;
+                let user_email = arr[i].email;
+                user_tb.innerHTML += `<tr>  <td id="rowid_${i}">${user_id}</td>  <td>${user_name}</td> <td>${user_email}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" id="row_edit${i}" class="del_links"">Delete</a></td> </tr>`
+            } 
+        }
+        function loadCountries(){
+            console.log(SecurityManager.GetAllUsers());
+            //Remove all child elements (e.g. options)
+            var countries = SecurityManager.GetCountries();
+            var cmb = document.getElementById('cmbCountries')
+            cmb.innerHTML = '';
+            for(var i=0;i<countries.length;i++)
+            {
+                var opt = document.createElement("option");
+                opt.setAttribute("value",countries[i].CountryID);
+                opt.innerText = countries[i].Name;
+                cmb.appendChild(opt);
+                getCities();
+            } 
+
+            function getCities(){
+                var citycmb = document.getElementById('cmbCities');
+                //Remove all child elements (e.g. options)
+                citycmb.innerHTML = '';
+                var cities = SecurityManager.GetCitiesByCountryId(cmb.value);
+                for(var i=0;i<cities.length;i++)
+                {
+                    var opt = document.createElement("option");
+                    opt.setAttribute("value",cities[i].CityID);
+                    opt.innerText = cities[i].Name;
+
+                    citycmb.appendChild(opt);
+                }   
+            }//end of onchange
+            cmb.onchange = function(){
+
+                var citycmb = document.getElementById('cmbCities');
+                
+                //Remove all child elements (e.g. options)
+                citycmb.innerHTML = '';
+
+                var cities = SecurityManager.GetCitiesByCountryId(cmb.value);
+
+                for(var i=0;i<cities.length;i++)
+                {
+                    var opt = document.createElement("option");
+                    opt.setAttribute("value",cities[i].CityID);
+                    opt.innerText = cities[i].Name;
+
+                    citycmb.appendChild(opt);
+                }   
+            }//end of onchange
+        }
+        function clearfields(){
+            console.log('clear button call')
+            var login = document.getElementById("login");
+            var pswd = document.getElementById("pswd");
+            var name = document.getElementById("name");
+            var email = document.getElementById("email");
+            login.value = "";
+            pswd.value = "";
+            name.value = "";
+            email.value = "";
+        }
+        function saveUser(){
+            var login = document.getElementById("login");
+            var pswd = document.getElementById("pswd");
+            var name = document.getElementById("name");
+            var email = document.getElementById("email");
+            var country = document.getElementById("cmbCountries");
+	        var selCountry = country.options[country.selectedIndex].text;
+            var city = document.getElementById("cmbCities");
+	        var selCity = city.options[city.selectedIndex].text; 
+            var user_obj = new User(login.value, pswd.value, name.value, email.value, selCountry, selCity);
+            SecurityManager.SaveUser(user_obj, clearfields, function(){
+                console.log('Not Added');
+            });
+            console.log(SecurityManager.GetAllUsers());
+            var user_tb = document.getElementById("table_body");
+            let arr = SecurityManager.GetAllUsers();
+            user_tb.innerHTML = '';
+            for(let i=0;i<arr.length;i++){
+                let user_id = arr[i].ID;
+                let user_name = arr[i].name;
+                let user_email = arr[i].email;
+                user_tb.innerHTML += `<tr>  <td id="rowid_${i}">${user_id}</td>  <td>${user_name}</td> <td>${user_email}</td> <td><a href="#">Edit</a></td> <td><a href="#" id="row_edit${i}" class="del_links"">Delete</a></td> </tr>`;
+            } 
+            var links = document.getElementsByClassName("del_links");
+            console.log(links);
+            for(let i=0; i<links.length;i++){
+                links[i].onclick = function() {
+                id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var val =confirm("Are you sure you want to delete?");
+                if (val){
+                    SecurityManager.DeleteUser(parseInt(id),function(){
+                        console.log("deleted successfully");
+                        main();
+                    }, function(){})
+                } 
+                }
+            }
+        }
+    </script>
+
+
+
+</head>
+<body onload="main()">
+    <nav>
+        <ul class = "nav_icons">
+            <li><a href="adminHome.html">Home</a></li>
+            <li><a href="#">User Management</a></li>
+            <li><a href="#full">Role Management</a></li>
+            <li><a href="#full">Permission Management</a></li>
+            <li><a href="#full">Role Permission Management</a></li>
+            <li><a href="#full">User Role Management</a></li>
+            <li><a href="index.html">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="form_container">
+        <div class="left">
+            <div class="form_head">
+                <h2 class="login_head">User Management</h2>
+            </div>
+            <div class="form_body">
+                <label for="">Login: </label> </br>
+                <input type="text" id="login" name="login" placeholder="username" size="33" required/>
+                <br><br>
+                <label for="">Password:</label> <br>
+                <input type="password" id="pswd" name="pswd" placeholder="password" size="33" required/>
+
+                <label for="">Name:</label> <br>
+                <input type="text" id="name" name="name" size="33" required/>
+
+                <label for="">Email:</label> <br>
+                <input type="text" id="email" name="email" size="33" required/>
+
+                <label for="country" size="33" id="country"> Country:
+                </label><br>
+                <select name="Select" id='cmbCountries'>
+                    <option value="none" selected>Select </option>
+                    <option value="other">other</option>
+                </select>
+
+                <label for="city" size="33" > City:
+                </label><br>
+                <select name="Select" value="Select" id="cmbCities">
+                    <option value="none">Select </option>
+                    <option value="other">other</option>
+                </select>
+
+
+            </div>
+            <div class="form_footer" align="right">
+                <button id="clearBtn">
+                    Clear
+                </button>
+                <button id="SaveBtn">
+                    Save
+                </button>
+            </div>
+        </div>
+        <div class="right">
+            <table class="user_data">
+                <thead>
+                    <tr = class="row_head">
+                        <th>ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="table_body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+
+    <main>
+    </main>
+    <script>
+        document.getElementById("clearBtn").addEventListener("click", clearfields);
+        document.getElementById("SaveBtn").addEventListener("click", saveUser);
+    </script>
+</body>
+</html>
