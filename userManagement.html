@@ -11,6 +11,23 @@
 
     <script>
         var userID = -1;
+        function selectCitywrtCoutry(){
+            var citycmb = document.getElementById('cmbCities');
+                //Remove all child elements (e.g. options)
+                citycmb.innerHTML = '';
+                var cmb = document.getElementById('cmbCountries'); 
+                var cities = SecurityManager.GetCitiesByCountryId(cmb.value);
+                for(var i=0;i<cities.length;i++)
+                {
+                    var opt = document.createElement("option");
+                    opt.setAttribute("value",cities[i].CityID);
+                    opt.innerText = cities[i].Name;
+
+                    citycmb.appendChild(opt);
+                }   
+        }
+
+
         function main(){
             loadCountries();
             loadTable();
@@ -54,10 +71,11 @@
                         country.selectedIndex = i;
                     }
                 }
-                getCities();
+
+                selectCitywrtCoutry();
                 for(let i=0;i<3;i++){
                     if(city.options[i].text == user.city){
-                        country.selectedIndex = i;
+                        city.selectedIndex = i;
                     }
                 }
 
