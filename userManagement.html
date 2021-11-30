@@ -10,6 +10,7 @@
     <title>User Management</title>
 
     <script>
+        var userID = -1;
         function main(){
             loadCountries();
             loadTable();
@@ -35,8 +36,32 @@
                 links2[i].onclick = function() {
                 let id = document.getElementById(`rowid_${i}`).innerHTML;
                 console.log(id);
-                console.log(SecurityManager.GetUserById (parseInt(id)));
+                var user = SecurityManager.GetUserById (parseInt(id));
+                let login = document.getElementById("login");
+                let pswd = document.getElementById("pswd");
+                let name = document.getElementById("name");
+                let email = document.getElementById("email");
+                let country = document.getElementById("cmbCountries");
+                let city = document.getElementById("cmbCities"); 
+
+                login.value = user.login;
+                pswd.value = user.password;
+                name.value = user.name;
+                email.value = user.email;
+                userID = parseInt(id);
+                for(let i=0;i<3;i++){
+                    if(country.options[i].text == user.country){
+                        country.selectedIndex = i;
+                    }
                 }
+                getCities();
+                for(let i=0;i<3;i++){
+                    if(city.options[i].text == user.city){
+                        country.selectedIndex = i;
+                    }
+                }
+
+                }    
             }
         }
             
@@ -71,6 +96,7 @@
                 var citycmb = document.getElementById('cmbCities');
                 //Remove all child elements (e.g. options)
                 citycmb.innerHTML = '';
+                var cmb = document.getElementById('cmbCountries'); 
                 var cities = SecurityManager.GetCitiesByCountryId(cmb.value);
                 for(var i=0;i<cities.length;i++)
                 {
@@ -110,6 +136,7 @@
             pswd.value = "";
             name.value = "";
             email.value = "";
+            userID = -1;
         }
         function saveUser(){
             var login = document.getElementById("login");
@@ -120,35 +147,28 @@
 	        var selCountry = country.options[country.selectedIndex].text;
             var city = document.getElementById("cmbCities");
 	        var selCity = city.options[city.selectedIndex].text; 
-            var user_obj = new User(login.value, pswd.value, name.value, email.value, selCountry, selCity);
+            if(login.value =="" || email.value=="" || pswd.value=="" || name.value=="")
+            {
+                alert("Necessary fields empty 😔");
+                return;
+            }
+            if (userID<=0)
+            {
+                let arr = SecurityManager.GetAllUsers();
+                for (let i=0;i<arr.length;i++)
+                {
+                    if(arr[i].login==login.value || arr[i].email==email.value){
+                        alert("User Already Exists 😅")
+                        return;
+                    }
+                }
+            }
+            var user_obj = new User(login.value, pswd.value, name.value, email.value, selCountry, selCity, userID);
             SecurityManager.SaveUser(user_obj, clearfields, function(){
                 console.log('Not Added');
             });
-            console.log(SecurityManager.GetAllUsers());
-            var user_tb = document.getElementById("table_body");
-            let arr = SecurityManager.GetAllUsers();
-            user_tb.innerHTML = '';
-            for(let i=0;i<arr.length;i++){
-                let user_id = arr[i].ID;
-                let user_name = arr[i].name;
-                let user_email = arr[i].email;
-                user_tb.innerHTML += `<tr>  <td id="rowid_${i}">${user_id}</td>  <td>${user_name}</td> <td>${user_email}</td> <td><a href="#">Edit</a></td> <td><a href="#" id="row_edit${i}" class="del_links"">Delete</a></td> </tr>`;
-            } 
-            var links = document.getElementsByClassName("del_links");
-            console.log(links);
-            for(let i=0; i<links.length;i++){
-                links[i].onclick = function() {
-                id = document.getElementById(`rowid_${i}`).innerHTML;
-                console.log(id);
-                var val =confirm("Are you sure you want to delete?");
-                if (val){
-                    SecurityManager.DeleteUser(parseInt(id),function(){
-                        console.log("deleted successfully");
-                        main();
-                    }, function(){})
-                } 
-                }
-            }
+            userID = -1;
+            main();
         }
     </script>
 
@@ -160,7 +180,7 @@
         <ul class = "nav_icons">
             <li><a href="adminHome.html">Home</a></li>
             <li><a href="#">User Management</a></li>
-            <li><a href="#full">Role Management</a></li>
+            <li><a href="roleManagement.html">Role Management</a></li>
             <li><a href="#full">Permission Management</a></li>
             <li><a href="#full">Role Permission Management</a></li>
             <li><a href="#full">User Role Management</a></li>
@@ -214,9 +234,9 @@
             <table class="user_data">
                 <thead>
                     <tr = class="row_head">
-                        <th>ID</th>
-                        <th>Name</th>
-                        <th>Email</th>
+                        <th id="head_id">ID</th>
+                        <th id="head_name">Name</th>
+                        <th id="head_email">Email</th>
                         <th>Edit</th>
                         <th>Delete</th>
                     </tr>

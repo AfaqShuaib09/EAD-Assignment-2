@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/roleManagement.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap" rel="stylesheet">
+    <script src="js/SecurityManager.js"></script>
+    <title>Role Management</title>
+
+    <script>
+        var roleID=-1;
+        function main(){
+            loadTable();
+            delLinksEventListener();
+            editLinksEventListener();
+        }
+        function loadTable(){
+            console.log(SecurityManager.GetAllUsers());
+            var role_tb = document.getElementById("table_body");
+            let arr = SecurityManager.GetAllRoles();
+            console.log(arr);
+            role_tb.innerHTML = '';
+            for(let i=0;i<arr.length;i++){
+                let role_id = arr[i].ID;
+                let role_name = arr[i].name;
+                let role_desc = arr[i].description;
+                role_tb.innerHTML += `<tr>  <td id="rowid_${i}" class=row_id">${role_id}</td>  <td class="role_name">${role_name}</td> <td class="role_desc">${role_desc}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" class="del_links"">Delete</a></td> </tr>`
+            } 
+        }
+        function delLinksEventListener(){
+            var links = document.getElementsByClassName("del_links");
+            for(let i=0;i<links.length;i++)
+            {
+                links[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var val =confirm("Are you sure you want to delete?");
+                if (val){
+                    SecurityManager.DeleteRole(parseInt(id),function(){
+                        console.log("deleted successfully");
+                        main();
+                    }, function(){})
+                }
+            }
+            }
+        }
+        function editLinksEventListener(){
+            var links2 = document.getElementsByClassName("edit_links");
+            console.log(links2);
+            for(let i=0;i<links2.length;i++)
+            {
+                links2[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var role = SecurityManager.GetRoleById(parseInt(id));
+                let name = document.getElementById("role");
+                let description = document.getElementById("desc");
+
+                name.value = role.name;
+                description.value = role.description;
+                roleID = role.ID;
+                }
+            }
+        }
+
+        function clearfields(){
+            document.getElementById("role").value="";
+            document.getElementById("desc").value="";
+        }
+        function saveRoles(){
+            var name = document.getElementById("role");
+            var desc = document.getElementById("desc");
+            if(name=="" || desc==""){
+                alert("Empty Necessary Fields 😔")
+            }
+            if (roleID<=0)
+            {
+                let arr = SecurityManager.GetAllRoles();
+                for (let i=0;i<arr.length;i++)
+                {
+                    if(arr[i].name==name.value){
+                        alert("User Already Exists 😅")
+                        return;
+                    }
+                }
+            }
+            var roleObj = new Role(roleID,name.value, desc.value);
+            SecurityManager.SaveRole(roleObj, clearfields, function(){
+                alert('Record not Added');
+            });
+            console.log(SecurityManager.GetAllRoles());
+            roleID = -1;
+            main();
+        }
+    </script>
+</head>
+<body onload="main()">
+    <nav>
+        <ul class = "nav_icons">
+            <li><a href="adminHome.html">Home</a></li>
+            <li><a href="userManagement.html">User Management</a></li>
+            <li><a href="roleManagement.html">Role Management</a></li>
+            <li><a href="#full">Permission Management</a></li>
+            <li><a href="#full">Role Permission Management</a></li>
+            <li><a href="#full">User Role Management</a></li>
+            <li><a href="index.html">Logout</a></li>
+        </ul>
+    </nav>
+    <div class="form_container">
+        <div class="left">
+            <div class="form_head">
+                <h2 class="role_head">Role Management</h2>
+            </div>
+            <div class="form_body">
+                <label for=""> Role Name: </label> </br>
+                <input type="text" id="role" name="role" size="33" required/>
+                <br><br>
+                <label for="">Description:</label> <br>
+                <input type="text" id="desc" name="desc" size="33" required/>
+            </div>
+            <div class="form_footer" align="right">
+                <button id="saveBtn">
+                    Save
+                </button>
+            </div>
+
+        </div>
+        <div class="right">
+            <table class="role_data">
+                <thead>
+                    <tr = class="row_head">
+                        <th id="role_id">ID</th>
+                        <th id="role_name">Name</th>
+                        <th id="role_desc">Description</th>
+                        <th>Edit</th>
+                        <th>Delete</th>
+                    </tr>
+                </thead>
+                <tbody id="table_body">
+
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("saveBtn").addEventListener("click", saveRoles);
+        // for(let i=0;i<2;i++){
+        //     SecurityManager.DeleteRole(i, function(){}, function(){});
+        // }
+    </script>
+</body>
+</html>

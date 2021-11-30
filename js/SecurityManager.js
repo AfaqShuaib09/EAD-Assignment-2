@@ -1,10 +1,17 @@
-﻿function User(login, password, name ,email, country, city) {
+﻿function User(login, password, name ,email, country, city,id=-1) {
+    this.ID = id;
     this.password = password;
     this.login = login
     this.name = name;
     this.email = email;
     this.country = country;
     this.city = city;
+ }
+
+ function Role(id,name, description){
+     this.ID = id;
+     this.name = name;
+     this.description = description;
  }
  
 //   var quayHotel = new Hotel('Quay', 40, 29);
