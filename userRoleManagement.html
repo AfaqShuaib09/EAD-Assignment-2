@@ -7,7 +7,107 @@
     <link rel="stylesheet" href="styles/permissionManagement.css">
     <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap" rel="stylesheet">
     <script src="js/SecurityManager.js"></script>
-    <title>Role Management</title>
+    <title>User-Role Management</title>
+
+    <script>
+        var userRoleID = -1;
+        function main(){
+            loadRoles();
+            loadUsers();
+            loadTable();
+            editLinksEventListener();
+            delLinksEventListener();
+
+        }
+        function loadTable(){
+            var userRole_tb = document.getElementById("table_body");
+            let arr = SecurityManager.GetAllUserRoles();
+            console.log(arr);
+            userRole_tb.innerHTML = '';
+            for(let i=0;i<arr.length;i++){
+                let userRole_id = arr[i].ID;
+                let role_id = arr[i].roleID;
+                let user_id = arr[i].userID;
+                var user = SecurityManager.GetUserById(user_id);
+                var role=SecurityManager.GetRoleById(role_id);
+                userRole_tb.innerHTML += `<tr>  <td id="rowid_${i}" class=row_id">${userRole_id}</td>  <td class="role_name">${user.login}</td> <td class="role_desc">${role.name}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" class="del_links"">Delete</a></td> </tr>`
+            } 
+        }
+        function loadRoles(){
+            //Remove all child elements (e.g. options)
+            var roles = SecurityManager.GetAllRoles();
+            var cmb = document.getElementById('role_dd')
+            cmb.innerHTML = '';
+            cmb.innerHTML+=`<option value=-1 selected disabled hidden>Select</option>`
+            for(var i=0;i<roles.length;i++)
+            {
+                var opt = document.createElement("option");
+                opt.setAttribute("value",roles[i].ID);
+                opt.innerText = roles[i].name;
+                cmb.appendChild(opt);
+            } 
+        }
+        function loadUsers(){
+            //Remove all child elements (e.g. options)
+            var users = SecurityManager.GetAllUsers();
+            var cmb = document.getElementById('user_dd')
+            cmb.innerHTML = '';
+            cmb.innerHTML+=`<option value=-1 selected disabled hidden>Select</option>`
+            for(var i=0;i<users.length;i++)
+            {
+                var opt = document.createElement("option");
+                opt.setAttribute("value",users[i].ID);
+                opt.innerText = users[i].login;
+                cmb.appendChild(opt);
+            } 
+        }
+        function delLinksEventListener(){
+            var links = document.getElementsByClassName("del_links");
+            for(let i=0;i<links.length;i++)
+            {
+                links[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var val =confirm("Are you sure you want to delete?");
+                if (val){
+                    SecurityManager.DeleteUserRole(parseInt(id),function(){
+                        console.log("deleted successfully");
+                        main();
+                    }, function(){})
+                }
+            }
+            }
+        }
+
+        function editLinksEventListener(){
+            var links2 = document.getElementsByClassName("edit_links");
+            console.log(links2);
+            for(let i=0;i<links2.length;i++)
+            {
+                links2[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var userRoleObj = SecurityManager.GetUserRoleById(parseInt(id));
+                var roleObj = SecurityManager.GetRoleById(userRoleObj.roleID);
+                var userObj = SecurityManager.GetUserById(userRoleObj.userID);
+                userRoleID = userRoleObj.ID;
+                let role = document.getElementById("role_dd");
+                let user = document.getElementById("user_dd");
+
+                for(let i=0;i<SecurityManager.GetAllRoles().length+1;i++){
+                    if(role.options[i].text == roleObj.name){
+                        role.selectedIndex = i;
+                    }
+                }
+                for(let i=0;i<SecurityManager.GetAllUsers().length +1;i++){
+                    if(user.options[i].text == userObj.login){
+                        user.selectedIndex = i;
+                    }
+                }
+                }
+            }
+        }
+    </script>
 
 </head>
 <body onload="main()">
@@ -28,13 +128,13 @@
                 <h2 class="perm_head">User-Role Management</h2>
             </div>
             <div class="form_body">
-                <label for=""> User: </label> </br>
-                <select name="dropdown" id='user_dd'>
+                <label for="">Role:</label> <br>
+                <select name="dropdown" id='role_dd'>
                     <option value="none" selected>Select </option>
                 </select>
                 <br><br>
-                <label for="">Role:</label> <br>
-                <select name="dropdown" id='role_dd'>
+                <label for=""> User: </label> </br>
+                <select name="dropdown" id='user_dd'>
                     <option value="none" selected>Select </option>
                 </select>
             </div>
@@ -43,7 +143,6 @@
                     Save
                 </button>
             </div>
-
         </div>
         <div class="right">
             <table class="perm_data">
@@ -64,6 +163,33 @@
     </div>
 
     <script>
-       // document.getElementById("saveBtn").addEventListener("click", savePermission);
+       document.getElementById("saveBtn").addEventListener("click", saveUserRole);
+       function saveUserRole(){
+            var role = document.getElementById("role_dd");
+            var selrole = role.options[role.selectedIndex].value;
+            var user = document.getElementById("user_dd");
+	        var selUser = user.options[user.selectedIndex].value; 
+            if(parseInt(selrole)==-1 || parseInt(selUser)==-1){
+                alert("Empty Necessary Fields 😔")
+                return;
+            }
+            if (userRoleID <=0)
+            {
+                let arr = SecurityManager.GetAllUserRoles();
+                for (let i=0;i<arr.length;i++)
+                {
+                    if(arr[i].roleID==selrole && arr[i].userID == selUser){
+                        alert("Selected Role-Permission Already Exists 😅")
+                        return;
+                    }
+                }
+            }
+            var userRoleObj = new UserRole(userRoleID,selUser, selrole);
+            SecurityManager.SaveUserRole(userRoleObj, function(){}, function(){
+                alert('Record not Added');
+            });
+            userRoleID = -1;
+            main();
+        }
     </script>
 </body>

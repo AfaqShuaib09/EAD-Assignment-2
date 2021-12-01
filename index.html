@@ -89,7 +89,7 @@
                             <input type="password" id="usr_pswd" name="usr_pswd" placeholder="password" size="33" required/>
                         </div>
                         <div class="form_footer" align="right">
-                                <button type="submit">
+                                <button id="loginUser" onclick="ValidateUser()">
                                     Login
                                 </button>
                         </div> 
@@ -118,6 +118,28 @@
                 alert("Invalid Credentials :'(")
                 document.getElementById("err_msg").removeAttribute("hidden"); 
             }
+        }
+        
+        function ValidateUser() {
+            console.log("btnclicked");
+            let userlogin = document.getElementById("usr_name").value;
+            let userPassword = document.getElementById("usr_pswd").value;
+            if(userlogin=="" || userPassword=="")
+            {
+                alert("Necessary Fields Empty 😔")
+                return;
+            }
+            console.log(` login: ${userlogin} password: ${userPassword}`)
+            var users = SecurityManager.GetAllUsers();
+            for(let i=0;i<users.length;i++){
+                if(users[i].login == userlogin && users[i].password == userPassword){
+                    localStorage.setItem("userid", users[i].ID);
+                    window.location.href ='/userHome.html';
+                    return;
+                }
+            }
+            alert("Invalid Credentials :'(")
+            document.getElementById("err_msg").removeAttribute("hidden"); 
         }
     </script>
 

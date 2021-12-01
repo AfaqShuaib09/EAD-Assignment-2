@@ -19,6 +19,20 @@
     this.name = name;
     this.description = description;
  }
+
+ function RolePermission(id, roleid, permid)
+ {
+     this.ID = id;
+     this.roleID = roleid;
+     this.permID = permid;
+ }
+
+ function UserRole(id,userid, roleid)
+ {
+     this.ID = id;
+     this.userID = userid;
+     this.roleID = roleid;
+ }
 //   var quayHotel = new Hotel('Quay', 40, 29);
 
 var SecurityManager = {};

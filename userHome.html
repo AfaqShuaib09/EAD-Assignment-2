@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles/userHome.css">
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400&display=swap" rel="stylesheet">
+    <script src="js/SecurityManager.js"></script>
+    <title>User Home</title>
+
+    <script>
+        function main() {
+        var user_id = localStorage.getItem('userid');
+        console.log(user_id);
+        var user = SecurityManager.GetUserById(parseInt(user_id));
+        document.getElementById('msg').innerHTML+=`${user.name}`;
+        var usr_roles = SecurityManager.GetAllUserRoles();
+        var arr = [];
+        var arr1 = [];
+        div_body = document.getElementById('div_body');
+        for (let i=0;i<usr_roles.length;i++){
+            if (usr_roles[i].userID == user_id)
+            {
+                arr.push(usr_roles[i]);
+            }
+        }
+        for(let j=0; j<arr.length;j++){
+            var rolePermissions = SecurityManager.GetAllRolePermissions();
+            div_body.innerHTML+=`<hr><div class="role_name">  <h2> ${j}. Role : ${SecurityManager.GetRoleById(arr[j].roleID).name}</h2></div>`;
+            //console.log(`${j}. Role: ${SecurityManager.GetRoleById(arr[j].roleID)}`)
+            div_body.innerHTML+=`<div class="permission_heading"><p>Permissions:<p></div>`;
+            div_body.innerHTML+=`<div class="permissions_list">`;
+            for(let k=0; k<rolePermissions.length;k++){
+                if(arr[j].roleID == rolePermissions[k].roleID)
+                {
+                    div_body.innerHTML+= `${SecurityManager.GetPermissionById(rolePermissions[k].permID).name}<br>`;
+                }
+            }
+            div_body.innerHTML+=`</div><br>`
+        }
+    }
+    </script>
+
+
+</head>
+<body onload="main()">
+    <nav>
+        <ul class = "nav_icons">
+            <li><a href="#">Home</a></li>
+            <li><a href="index.html">Logout</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <div class="main">
+            <div class="container">
+                <div class="header">
+                <h1 id="msg"> Welcome </h1>
+                </div>
+                <div class="div_body" id="div_body">
+                   
+                </div>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

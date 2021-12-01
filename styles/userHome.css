@@ -1,0 +1,102 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans+Condensed:wght@300&display=swap');
+
+@font-face {
+    font-family: "chunk_five123";
+    src: url('/fonts/Chunk.ttf');
+}
+
+* {
+    margin:0px;
+}
+
+:root {
+    --primary : #343434;
+    --positive: #3CB371;
+}
+
+nav {
+    background-color: var(--primary);
+}
+nav ul li a {
+    font-size: 20px;
+    color: whitesmoke;
+    text-decoration: none;
+}
+
+nav ul li a:hover {
+    text-transform: capitalize;
+    color: var(--positive);
+}
+
+
+nav ul li {
+  font-family: 'Oswald', sans-serif;
+  list-style: none;
+  display: inline-block;
+  padding: 20px 10px;
+  padding-right: 8px;    
+}
+
+nav ul.nav_icons li:nth-child(1) a {
+    margin-left: 5px;
+}
+
+h1 {
+    margin-left: 15px;
+    margin-top: 50px;
+    padding-top: 50px;
+    color: whitesmoke;
+    font-weight: bold;
+    font-size: 25px;
+    padding: 5px;
+    font-family: "chunk_five123";
+}
+
+div.main{
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+}
+
+div.header {
+    height: 80px;
+    line-height: 80px;
+    width: 600px;
+    font-weight: bold;
+    padding-left: 5px;
+    background-color:var(--primary);
+}
+
+div.div_body{
+    padding-left: 0px;
+}
+
+div.role_name {
+    background-color: whitesmoke;
+    height: 120px;
+}
+
+h2{
+    margin-left: 5px;
+    color: darkgray;
+    font-family: "chunk_five123";
+}
+
+div.permission_heading {
+    background-color: var(--primary);
+    color: white;
+    line-height: 25px;
+    height: 25px;
+}
+
+p {
+    margin-left: 5px;
+    font-weight: bold;
+    font-size: 15px;
+}
+
+div.permissions_list {
+    background-color: whitesmoke;
+    color: black;
+    padding-bottom: 3px;
+}

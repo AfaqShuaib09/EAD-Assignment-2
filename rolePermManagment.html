@@ -9,6 +9,110 @@
     <script src="js/SecurityManager.js"></script>
     <title>Role-Permissions Management</title>
 
+    <script>
+        var permRoleID = -1;
+        function main(){
+            loadRoles();
+            loadPermissions();
+            loadTable();
+            delLinksEventListener();
+            editLinksEventListener();
+            
+        }
+        function loadTable(){
+            var roleperm_tb = document.getElementById("table_body");
+            let arr = SecurityManager.GetAllRolePermissions();
+            console.log(arr);
+            roleperm_tb.innerHTML = '';
+            console.log(arr.length);
+            for(let i=0;i<arr.length;i++){
+                let rolePerm_id = arr[i].ID;
+                let role_id = arr[i].roleID;
+                let perm_id = arr[i].permID;
+                var role=SecurityManager.GetRoleById(role_id);
+                var perm = SecurityManager.GetPermissionById(perm_id);
+                roleperm_tb.innerHTML += `<tr>  <td id="rowid_${i}" class=row_id">${rolePerm_id}</td>  <td class="role_name">${role.name}</td> <td class="role_desc">${perm.name}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" class="del_links"">Delete</a></td> </tr>`
+            } 
+        }
+        function loadRoles(){
+            //Remove all child elements (e.g. options)
+            var roles = SecurityManager.GetAllRoles();
+            var cmb = document.getElementById('role_dd')
+            cmb.innerHTML = '';
+            cmb.innerHTML+=`<option value=-1 selected disabled hidden>Select</option>`
+            for(var i=0;i<roles.length;i++)
+            {
+                var opt = document.createElement("option");
+                opt.setAttribute("value",roles[i].ID);
+                opt.innerText = roles[i].name;
+                cmb.appendChild(opt);
+            } 
+        }
+        function loadPermissions(){
+            //Remove all child elements (e.g. options)
+            var permission = SecurityManager.GetAllPermissions();
+            var cmb = document.getElementById('perm_dd')
+            cmb.innerHTML = '';
+            cmb.innerHTML+=`<option value=-1 selected disabled hidden>Select</option>`
+            for(var i=0;i<permission.length;i++)
+            {
+                var opt = document.createElement("option");
+                opt.setAttribute("value",permission[i].ID);
+                opt.innerText = permission[i].name;
+                cmb.appendChild(opt);
+            } 
+        }
+        function delLinksEventListener(){
+            var links = document.getElementsByClassName("del_links");
+            for(let i=0;i<links.length;i++)
+            {
+                links[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var val =confirm("Are you sure you want to delete?");
+                if (val){
+                    SecurityManager.DeleteRolePermission(parseInt(id),function(){
+                        console.log("deleted successfully");
+                        main();
+                    }, function(){})
+                }
+            }
+            }
+        }
+        function editLinksEventListener(){
+            var links2 = document.getElementsByClassName("edit_links");
+            console.log(links2);
+            for(let i=0;i<links2.length;i++)
+            {
+                links2[i].onclick = function() {
+                let id = document.getElementById(`rowid_${i}`).innerHTML;
+                console.log(id);
+                var rolePermObj = SecurityManager.GetRolePermissionById(parseInt(id));
+                var roleObj = SecurityManager.GetRoleById(rolePermObj.roleID);
+                console.log(roleObj);
+                var permObj = SecurityManager.GetPermissionById(rolePermObj.permID);
+                permRoleID = rolePermObj.ID;
+                let role = document.getElementById("role_dd");
+                let perm = document.getElementById("perm_dd");
+
+                for(let i=0;i<SecurityManager.GetAllRoles().length+1;i++){
+                    console.log('Hello');
+                    console.log(role.options[i].text);
+                    if(role.options[i].text == roleObj.name){
+                        role.selectedIndex = i;
+                    }
+                }
+                for(let i=0;i<SecurityManager.GetAllPermissions().length +1;i++){
+                    if(perm.options[i].text == permObj.name){
+                        perm.selectedIndex = i;
+                    }
+                }
+                }
+            }
+        }
+
+    </script>
+
 </head>
 <body onload="main()">
     <nav>
@@ -64,6 +168,34 @@
     </div>
 
     <script>
-       // document.getElementById("saveBtn").addEventListener("click", savePermission);
+        document.getElementById("saveBtn").addEventListener("click", saveRolePermission);
+            function saveRolePermission(){
+            var role = document.getElementById("role_dd");
+            var selrole = role.options[role.selectedIndex].value;
+            var perm = document.getElementById("perm_dd");
+	        var selperm = perm.options[perm.selectedIndex].value; 
+            if(parseInt(selrole)==-1 || parseInt(selperm)==-1){
+                alert("Empty Necessary Fields 😔")
+                return;
+            }
+            if (permRoleID <=0)
+            {
+                let arr = SecurityManager.GetAllRolePermissions();
+                for (let i=0;i<arr.length;i++)
+                {
+                    if(arr[i].roleID==selrole && arr[i].permID == selperm){
+                        alert("Selected Role-Permission Already Exists 😅")
+                        return;
+                    }
+                }
+            }
+            var role_permObj = new RolePermission(permRoleID ,selrole, selperm);
+            SecurityManager.SaveRolePermission(role_permObj, function(){}, function(){
+                alert('Record not Added');
+            });
+            console.log(SecurityManager.GetAllRolePermissions());
+            permRoleID = -1;
+            main();
+        }
     </script>
 </body>
