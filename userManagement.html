@@ -37,8 +37,16 @@
                 links[i].onclick = function() {
                 let id = document.getElementById(`rowid_${i}`).innerHTML;
                 console.log(id);
+                userRoles = SecurityManager.GetAllUserRoles();
                 var val =confirm("Are you sure you want to delete?");
                 if (val){
+                    for(let j=0;j<userRoles.length;j++)
+                    {
+                        if(userRoles[i].userID==parseInt(id))
+                        {
+                            SecurityManager.DeleteUserRole(userRoles[i].ID);
+                        }
+                    }
                     SecurityManager.DeleteUser(parseInt(id),function(){
                         console.log("deleted successfully");
                         main();
