@@ -24,13 +24,13 @@
             let arr = SecurityManager.GetAllRolePermissions();
             console.log(arr);
             roleperm_tb.innerHTML = '';
-            console.log(arr.length);
             for(let i=0;i<arr.length;i++){
                 let rolePerm_id = arr[i].ID;
                 let role_id = arr[i].roleID;
                 let perm_id = arr[i].permID;
                 var role=SecurityManager.GetRoleById(role_id);
                 var perm = SecurityManager.GetPermissionById(perm_id);
+                console.log(roleperm_tb);
                 roleperm_tb.innerHTML += `<tr>  <td id="rowid_${i}" class=row_id">${rolePerm_id}</td>  <td class="role_name">${role.name}</td> <td class="role_desc">${perm.name}</td> <td><a href="#" class="edit_links">Edit</a></td> <td><a href="#" class="del_links"">Delete</a></td> </tr>`
             } 
         }
